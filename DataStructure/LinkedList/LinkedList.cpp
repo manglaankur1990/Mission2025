@@ -67,6 +67,60 @@ void reverse_list(node **start) {
     *start = temp2;
 }
 
+node* getNodePtratData(node *start, int data) {
+    node* dataPtr = start;
+    while(dataPtr != nullptr && dataPtr->data != data) {
+        dataPtr = dataPtr->next;
+    }
+    return dataPtr;
+}
+
+node* getMiddleNode(node* start) {
+    if(nullptr == start || nullptr == start->next) {
+        return start;
+    }
+    node* slow = start;
+    node* fast = start;
+    while(fast->next != nullptr && fast->next->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    return slow;
+}
+
+int getDataAtMiddleNode(node* start) {
+    return getMiddleNode(start)->data;
+}
+
+bool isDataPresent(node *start, int data) {
+    bool isPresent = false;
+    if(nullptr != getNodePtratData(start, data)) {
+        isPresent = true;
+    }
+    return isPresent;
+}
+
+void deleteGivenData(node** start, int data) {
+    if((*start)->data == data) {
+        node* temp = *start;
+        *start = (*start)->next;
+        delete temp;
+        temp = nullptr;
+    }
+    else {
+        node* prev = *start;
+        node* curr = prev->next;
+        while(curr && curr->data != data) {
+            prev = curr;
+            curr = curr->next;
+        }
+        prev->next = curr->next;
+        delete curr;
+        curr = nullptr;
+        prev = nullptr;
+    }
+}
+
 int main() {
     node* start = nullptr;
     insert_node_at_end(&start, 5);
@@ -84,5 +138,19 @@ int main() {
     reverse_list(&start);
 
     print_node(start); 
+    cout << "is Data 5 present ? : " << isDataPresent(start, 5) << endl;
+    cout << "is Data 10 present ? : " << isDataPresent(start, 10) << endl;
+
+    cout << "Data at middle node is : " << getDataAtMiddleNode(start) << endl;
+
+    deleteGivenData(&start, 1);
+    print_node(start);
+
+    deleteGivenData(&start, 7);
+    print_node(start);
+
+    deleteGivenData(&start, 9);
+    print_node(start);        
+
     return 0;
 }
